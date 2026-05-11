@@ -1,0 +1,485 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{font-family:Arial,sans-serif;background:#fff;color:#111;padding:16px;border:1px solid #bcd;border-radius:12px}
+.top-bar{background:#1a3c8f;border-radius:8px;padding:14px 18px;margin-bottom:18px}
+.top-bar h1{font-size:18px;font-weight:700;color:#fff;margin-bottom:3px}
+.top-bar p{font-size:12px;color:#c7d8ff}
+.step-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:16px}
+.step-num{background:#1a3c8f;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-title{font-size:14px;font-weight:700;color:#1a3c8f}
+.wl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
+.wc{border:2px solid #c8d0e0;border-radius:8px;padding:10px;cursor:pointer;background:#f5f7ff}
+.wc:hover{border-color:#1a3c8f;background:#e8eeff}
+.wc.on{border:2.5px solid #1a3c8f;background:#dce6ff}
+.wc i{font-size:20px;color:#1a3c8f;display:block;margin-bottom:4px}
+.wc h3{font-size:12px;font-weight:700;color:#1a1a2e}
+.wc p{font-size:10px;color:#444;margin-top:2px;line-height:1.3}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fld{margin-bottom:2px}
+.fld label{display:block;font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:5px}
+.fld .sub{font-size:11px;color:#555;margin-top:3px}
+.fld select,.fld input[type=number],.fld input[type=text]{width:100%;height:38px;padding:0 10px;font-size:13px;color:#111;border:2px solid #7a8ab0;border-radius:6px;background:#fff}
+.srow{display:flex;align-items:center;gap:8px;background:#f0f4ff;border:2px solid #7a8ab0;border-radius:6px;padding:6px 10px}
+.srow input[type=range]{flex:1;height:5px;-webkit-appearance:none;appearance:none;background:#a0b0d8;border-radius:3px;outline:none;cursor:pointer}
+.srow input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#1a3c8f;border:2px solid #fff;box-shadow:0 0 0 2px #1a3c8f;cursor:pointer}
+.sval{font-size:13px;font-weight:700;color:#1a3c8f;min-width:68px;text-align:right;background:#c8d8ff;padding:3px 7px;border-radius:5px;white-space:nowrap}
+.divider{border:none;border-top:2px solid #dde3f0;margin:14px 0}
+.btn-calc{display:block;width:100%;padding:14px;font-size:16px;font-weight:700;background:#e85d04;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:16px}
+.btn-calc:hover{background:#c94e00}
+.btn-label{display:flex;align-items:center;justify-content:center;gap:8px}
+.results{display:none;margin-top:20px}
+.results.show{display:block}
+.res-top{background:#1a3c8f;border-radius:8px 8px 0 0;padding:12px 16px}
+.res-top h2{font-size:15px;font-weight:700;color:#fff}
+.res-top p{font-size:11px;color:#b0c8ff;margin-top:2px}
+.met-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#eef2ff;padding:12px;border-left:1px solid #bbc;border-right:1px solid #bbc}
+.met{background:#fff;border:2px solid #c0ccee;border-radius:7px;padding:10px 8px;text-align:center}
+.met .mv{font-size:17px;font-weight:700;color:#1a3c8f}
+.met .ml{font-size:10px;color:#333;font-weight:600;margin-top:3px}
+.warn{background:#fff3cd;border-left:4px solid #e67e00;padding:10px 14px;font-size:12px;color:#5a3500;font-weight:600;border-radius:0 6px 6px 0;margin:10px 12px}
+table.spec{width:100%;border-collapse:collapse;font-size:13px;border:1px solid #bbc}
+table.spec th{background:#1a3c8f;color:#fff;text-align:left;padding:9px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+table.spec td{padding:9px 14px;border-bottom:1px solid #dde3f0;vertical-align:top;color:#111}
+table.spec td:first-child{font-weight:700;color:#1a3c8f;background:#f0f4ff;width:40%}
+table.spec tr:hover td{background:#e8eeff}
+table.spec tr:hover td:first-child{background:#d0dcff}
+.chk-head{font-size:13px;font-weight:700;color:#1a3c8f;padding:12px 14px 4px;background:#f5f7ff;border-top:2px solid #dde3f0;border-left:1px solid #bbc;border-right:1px solid #bbc}
+.chk-body{font-size:12px;color:#111;line-height:2.2;font-weight:500;padding:4px 14px 14px;background:#f5f7ff;border-left:1px solid #bbc;border-right:1px solid #bbc}
+.foot-note{font-size:11px;color:#555;padding:10px 14px;background:#fff;border:1px solid #bbc;border-top:2px solid #dde3f0;font-style:italic;line-height:1.5}
+.act-row{display:flex;gap:10px;padding:12px 14px;background:#eef2ff;border:1px solid #bbc;border-top:none;border-radius:0 0 8px 8px;flex-wrap:wrap}
+.act-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;font-size:13px;font-weight:700;border-radius:7px;border:2px solid #1a3c8f;background:#fff;color:#1a3c8f;cursor:pointer}
+.act-btn:hover{background:#dce6ff}
+.act-btn.primary{background:#1a3c8f;color:#fff}
+.act-btn.primary:hover{background:#0e2460}
+
+/* RFP Modal */
+.rfp-overlay{display:none;position:relative;margin-top:24px;border:3px solid #1a3c8f;border-radius:12px;overflow:hidden}
+.rfp-overlay.show{display:block}
+.rfp-toolbar{background:#1a3c8f;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.rfp-toolbar h3{font-size:14px;font-weight:700;color:#fff}
+.rfp-tbtn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;font-size:12px;font-weight:700;border-radius:6px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer}
+.rfp-tbtn:hover{background:rgba(255,255,255,.15)}
+.rfp-tbtn.dl{background:#e85d04;border-color:#e85d04}
+.rfp-tbtn.dl:hover{background:#c94e00}
+.rfp-tabs{display:flex;background:#eef2ff;border-bottom:2px solid #1a3c8f}
+.rtab{padding:9px 18px;font-size:12px;font-weight:700;color:#1a3c8f;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.rtab.on{border-bottom:3px solid #e85d04;background:#fff;color:#e85d04}
+.rfp-body{background:#fff;padding:0}
+.rfp-section{display:none;padding:0}
+.rfp-section.on{display:block}
+.rfp-doc{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:#111;background:#fafbff;padding:20px 24px;white-space:pre-wrap;word-break:break-word;max-height:500px;overflow-y:auto;border:none}
+.rfp-doc h2{font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#1a3c8f;margin:18px 0 6px;border-bottom:2px solid #1a3c8f;padding-bottom:4px}
+.rfp-doc h3{font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#333;margin:14px 0 4px}
+.rfp-doc .clause{background:#f0f4ff;border-left:4px solid #1a3c8f;padding:8px 12px;margin:8px 0;border-radius:0 6px 6px 0;font-family:Arial,sans-serif;font-size:12px}
+.rfp-doc table{width:100%;border-collapse:collapse;margin:10px 0;font-family:Arial,sans-serif;font-size:12px}
+.rfp-doc table th{background:#1a3c8f;color:#fff;padding:7px 10px;text-align:left;font-size:11px}
+.rfp-doc table td{padding:7px 10px;border-bottom:1px solid #dde3f0;color:#111}
+.rfp-doc table td:first-child{font-weight:700;background:#f5f7ff;width:45%}
+.rfp-print-info{font-family:Arial,sans-serif;font-size:11px;color:#888;padding:8px 24px;border-top:1px solid #dde3f0;background:#f5f7ff}
+</style>
+
+<h2 class="sr-only">GPU Procurement Sizing Calculator with RFP Generator</h2>
+<div class="wrap">
+
+  <div class="top-bar">
+    <h1><i class="ti ti-cpu" aria-hidden="true" style="margin-right:8px"></i>GPU Procurement Sizing Calculator</h1>
+    <p>Select workload, set parameters, generate GPU specification and full RFP tender document.</p>
+  </div>
+
+  <div class="step-row"><span class="step-num">1</span><span class="step-title">Select primary workload type</span></div>
+  <div class="wl-grid" id="wlg">
+    <div class="wc on" onclick="selWL(this,'ai')"><i class="ti ti-brain" aria-hidden="true"></i><h3>AI / ML training</h3><p>Model training, fine-tuning, deep learning</p></div>
+    <div class="wc" onclick="selWL(this,'inf')"><i class="ti ti-robot" aria-hidden="true"></i><h3>AI inference</h3><p>Deployed model serving, chatbots, APIs</p></div>
+    <div class="wc" onclick="selWL(this,'hpc')"><i class="ti ti-chart-scatter" aria-hidden="true"></i><h3>HPC / simulation</h3><p>Scientific computing, climate, fluid dynamics</p></div>
+    <div class="wc" onclick="selWL(this,'vis')"><i class="ti ti-3d-cube-sphere" aria-hidden="true"></i><h3>3D / visualisation</h3><p>GIS, rendering, CAD, digital twin</p></div>
+    <div class="wc" onclick="selWL(this,'cv')"><i class="ti ti-camera" aria-hidden="true"></i><h3>Computer vision</h3><p>Surveillance, inspection, image analytics</p></div>
+    <div class="wc" onclick="selWL(this,'nlp')"><i class="ti ti-message-dots" aria-hidden="true"></i><h3>NLP / LLM</h3><p>Language models, document processing, OCR</p></div>
+  </div>
+
+  <div class="step-row"><span class="step-num">2</span><span class="step-title">Workload scale &amp; data parameters</span></div>
+  <div class="g2">
+    <div class="fld"><label>Dataset size</label><div class="srow"><input type="range" min="1" max="10000" step="1" value="100" id="ds" oninput="sv('ds','dsv',v=>v>=1000?(v/1000).toFixed(1)+' TB':v+' GB')"><span class="sval" id="dsv">100 GB</span></div><div class="sub">Raw data or model size in GPU memory hierarchy</div></div>
+    <div class="fld"><label>Concurrent users / parallel jobs</label><div class="srow"><input type="range" min="1" max="500" step="1" value="10" id="usr" oninput="sv('usr','usrv',v=>v)"><span class="sval" id="usrv">10</span></div><div class="sub">Simultaneous inference requests or training jobs</div></div>
+    <div class="fld"><label>Model parameter count</label><div class="srow"><input type="range" min="1" max="70000" step="100" value="1000" id="prm" oninput="sv('prm','prmv',v=>v>=1000?(v/1000).toFixed(1)+'B params':v+'M params')"><span class="sval" id="prmv">1B params</span></div><div class="sub">Set to 1 if not using neural networks</div></div>
+    <div class="fld"><label>Precision requirement</label><select id="prec"><option value="fp32">FP32 — Full precision (training / HPC)</option><option value="fp16" selected>FP16/BF16 — Mixed precision (standard AI)</option><option value="int8">INT8 — Quantised (inference / edge)</option></select><div class="sub">Lower precision = less VRAM &amp; higher throughput</div></div>
+    <div class="fld"><label>Desired throughput (samples or req/sec)</label><input type="number" id="tput" value="500" min="1" placeholder="e.g. 500"><div class="sub">Tokens/sec for LLM, images/sec for CV, iter/sec for HPC</div></div>
+    <div class="fld"><label>Deployment environment</label><select id="env"><option value="dc">Data centre / on-premises server</option><option value="cloud">Cloud / hybrid</option><option value="edge">Edge / embedded</option></select></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="step-row"><span class="step-num">3</span><span class="step-title">Operational requirements &amp; department details</span></div>
+  <div class="g2">
+    <div class="fld"><label>Department / ministry name</label><input type="text" id="dept" placeholder="e.g. Ministry of Electronics &amp; IT"><div class="sub">Used in RFP document header</div></div>
+    <div class="fld"><label>Tender reference number</label><input type="text" id="tref" placeholder="e.g. MEITY/GPU/2026/001"><div class="sub">Used in RFP document header</div></div>
+    <div class="fld"><label>Required uptime</label><select id="upt"><option value="std">Standard (business hours)</option><option value="hi">High availability (24 × 7)</option><option value="crit">Mission-critical (99.9% SLA)</option></select></div>
+    <div class="fld"><label>Budget envelope (₹ lakhs, approx.)</label><input type="number" id="bgt" value="50" min="1" placeholder="e.g. 50"><div class="sub">Indicative — final cost from GeM / OEM quotation</div></div>
+    <div class="fld"><label>Data sensitivity</label><select id="sens"><option value="pub">Public / non-sensitive</option><option value="res">Restricted / internal</option><option value="sec">Classified / secret</option></select></div>
+    <div class="fld"><label>Planning horizon (years)</label><div class="srow"><input type="range" min="1" max="7" step="1" value="3" id="hor" oninput="sv('hor','horv',v=>v+' yr'+(v>1?'s':''))"><span class="sval" id="horv">3 yrs</span></div></div>
+  </div>
+
+  <button class="btn-calc" id="genbtn" onclick="calc()">
+    <div class="btn-label"><i class="ti ti-cpu" aria-hidden="true" style="font-size:20px"></i>GENERATE GPU SPECIFICATION</div>
+  </button>
+
+  <!-- GPU SPEC RESULTS -->
+  <div class="results" id="res">
+    <div class="res-top"><h2><i class="ti ti-checklist" aria-hidden="true" style="margin-right:6px"></i>GPU Specification Report</h2><p id="res-sub"></p></div>
+    <div class="met-row" id="mrow"></div>
+    <div id="wbox"></div>
+    <table class="spec"><thead><tr><th>Specification parameter</th><th>Recommended value / range</th></tr></thead><tbody id="sbody"></tbody></table>
+    <div class="chk-head"><i class="ti ti-list-check" aria-hidden="true" style="margin-right:5px"></i>Procurement checklist</div>
+    <div class="chk-body" id="cklist"></div>
+    <div class="foot-note" id="fnote"></div>
+    <div class="act-row">
+      <button class="act-btn" onclick="expTxt()"><i class="ti ti-download" aria-hidden="true"></i> Download spec sheet</button>
+      <button class="act-btn primary" onclick="showRFP()"><i class="ti ti-file-text" aria-hidden="true"></i> Generate RFP language ↗</button>
+    </div>
+  </div>
+
+  <!-- RFP DOCUMENT -->
+  <div class="rfp-overlay" id="rfpBox">
+    <div class="rfp-toolbar">
+      <h3><i class="ti ti-file-certificate" aria-hidden="true" style="margin-right:6px"></i>RFP / Tender Document — Preview</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="rfp-tbtn" onclick="copyRFP()"><i class="ti ti-copy" aria-hidden="true"></i> Copy all</button>
+        <button class="rfp-tbtn dl" onclick="downloadRFP()"><i class="ti ti-download" aria-hidden="true"></i> Download .txt</button>
+      </div>
+    </div>
+    <div class="rfp-tabs">
+      <div class="rtab on" onclick="showTab(0)">Cover &amp; Introduction</div>
+      <div class="rtab" onclick="showTab(1)">Eligibility Criteria</div>
+      <div class="rtab" onclick="showTab(2)">Technical Specifications</div>
+      <div class="rtab" onclick="showTab(3)">Evaluation &amp; SLA</div>
+      <div class="rtab" onclick="showTab(4)">Terms &amp; Compliance</div>
+    </div>
+    <div class="rfp-body">
+      <div class="rfp-section on" id="tab0"><div class="rfp-doc" id="doc0"></div></div>
+      <div class="rfp-section" id="tab1"><div class="rfp-doc" id="doc1"></div></div>
+      <div class="rfp-section" id="tab2"><div class="rfp-doc" id="doc2"></div></div>
+      <div class="rfp-section" id="tab3"><div class="rfp-doc" id="doc3"></div></div>
+      <div class="rfp-section" id="tab4"><div class="rfp-doc" id="doc4"></div></div>
+    </div>
+    <div class="rfp-print-info">This RFP template is auto-generated for reference. Legal review by department counsel is recommended before issuance.</div>
+  </div>
+</div>
+
+<script>
+let wl='ai', specRows=[], specData={};
+function selWL(el,w){document.querySelectorAll('.wc').forEach(c=>c.classList.remove('on'));el.classList.add('on');wl=w;}
+function sv(id,oid,fn){const v=parseInt(document.getElementById(id).value);document.getElementById(oid).textContent=fn(v);}
+function g(id){return document.getElementById(id)}
+function gv(id){return parseInt(g(id).value)||0}
+function gt(id){return g(id).value.trim()}
+
+function calc(){
+  const ds=gv('ds'),usr=gv('usr'),prm=gv('prm');
+  const prec=g('prec').value,env=g('env').value;
+  const upt=g('upt').value,sens=g('sens').value;
+  const hor=gv('hor'),bgt=parseFloat(g('bgt').value)||50;
+  const tput=gv('tput')||500;
+  const dept=gt('dept')||'[Department Name]';
+  const tref=gt('tref')||'[Tender Ref No.]';
+
+  const pm=prec==='fp32'?4:prec==='fp16'?2:1;
+  const pGB=(prm*1e6*pm)/1e9;
+  const rawV=pGB*2.5*(wl==='inf'?Math.ceil(usr/4):1);
+  const perV=[24,40,80].find(v=>v>=rawV*1.35)||80;
+  const cnt=Math.max(1,Math.ceil((rawV*1.35)/perV));
+  const totV=cnt*perV;
+  const minTF=Math.max(20,Math.ceil((tput*pm*0.15*Math.max(1,prm/1000))/1000));
+  const spare=Math.max(1,Math.ceil(cnt*0.25));
+  const ram=Math.max(256,cnt*64);
+
+  let fam,alt,link;
+  if(env==='edge'){fam='NVIDIA Jetson Orin NX / AMD Instinct MI100';alt='Intel Arc A-series (edge-grade)';link='PCIe Gen 4 or embedded';}
+  else if(minTF>300||perV>=80){fam='NVIDIA H100 80 GB HBM3 / AMD Instinct MI300X 192 GB';alt='NVIDIA A100 80 GB SXM';link='NVLink 4.0 / Infinity Fabric (≥ 900 GB/s)';}
+  else if(minTF>100||perV>=40){fam='NVIDIA A100 40/80 GB / AMD Instinct MI250X';alt='NVIDIA L40S 48 GB';link='NVLink 3.0 / PCIe Gen 5 (≥ 600 GB/s)';}
+  else{fam='NVIDIA A30 24 GB / NVIDIA L4 24 GB';alt='AMD Instinct MI210';link='PCIe Gen 4 (≥ 256 GB/s)';}
+
+  const bw=perV>=80?'≥ 3.35 TB/s (HBM3)':perV>=40?'≥ 2 TB/s (HBM2e)':'≥ 600 GB/s (HBM2)';
+  const psu=cnt<=2?'1.6 kW (N+1 redundant)':cnt<=4?'3.2 kW (N+1 redundant)':'6.4 kW+ (2N redundant)';
+  const cool=env==='dc'?(cnt>=4?'Liquid / direct liquid cooling (DLC)':'Active air ≥ 30 CFM per GPU'):'Passive + fan hybrid';
+  const net=upt==='crit'||usr>50?'InfiniBand HDR 200 Gb/s or 400 GbE':'Dual 100 GbE NIC';
+  const stor=ds>=500?`All-flash NVMe array ≥ ${Math.ceil(ds*2.5)} GB, ≥ 10 GB/s seq. read`:`NVMe SSD ≥ ${Math.ceil(ds*2.5)} GB`;
+  const os=sens==='sec'?'RHEL / Oracle Linux (airgapped, STQC certified)':'Ubuntu 22.04 LTS / RHEL 9 with CUDA 12.x / ROCm 6.x';
+  const red=upt==='crit'?'Dual GPU nodes + warm standby + automated failover':upt==='hi'?'RAID + UPS + hot-swap PSU':'Basic RAID-5 + UPS';
+  const uptLabel={'std':'Standard (business hours)','hi':'High availability 24×7','crit':'Mission-critical 99.9% SLA'}[upt];
+  const sensLabel={'pub':'Public / non-sensitive','res':'Restricted / internal','sec':'Classified / secret'}[sens];
+  const envLabel={'dc':'Data centre / on-premises','cloud':'Cloud / hybrid','edge':'Edge / embedded'}[env];
+  const precLabel={'fp32':'FP32 Full precision','fp16':'FP16/BF16 Mixed precision','int8':'INT8 Quantised'}[prec];
+  const wlLabel={'ai':'AI / ML Training','inf':'AI Inference','hpc':'HPC / Simulation','vis':'3D / Visualisation','cv':'Computer Vision','nlp':'NLP / LLM'}[wl];
+
+  const bpg=bgt/Math.max(1,cnt);
+  let warn='';
+  if(bpg<8&&perV>=80)warn='Budget may be insufficient for H100-class GPUs (est. ₹15–20 L/unit). Consider phased procurement or cloud-burst hybrid.';
+  else if(bpg<4&&perV>=40)warn='Budget is tight for A100-class hardware. Explore GeM rate contracts or NVIDIA DGX lease options.';
+
+  g('res-sub').textContent=`Workload: ${wlLabel} | Precision: ${precLabel} | Environment: ${envLabel} | Generated: ${new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}`;
+  g('mrow').innerHTML=`<div class="met"><div class="mv">${cnt}</div><div class="ml">GPU units required</div></div><div class="met"><div class="mv">${totV} GB</div><div class="ml">Total VRAM</div></div><div class="met"><div class="mv">≥${minTF} TFLOPS</div><div class="ml">Min compute (FP16)</div></div><div class="met"><div class="mv">${hor} yr${hor>1?'s':''}</div><div class="ml">Planning horizon</div></div>`;
+  g('wbox').innerHTML=warn?`<div class="warn"><i class="ti ti-alert-triangle" aria-hidden="true" style="margin-right:5px"></i>${warn}</div>`:'';
+
+  specRows=[
+    ['Primary workload type',wlLabel],
+    ['GPU architecture / family',fam],
+    ['Alternate / L1 option',alt],
+    ['GPU count (minimum)',`${cnt} unit${cnt>1?'s':''} + ${spare} spare for HA`],
+    ['VRAM per GPU',`≥ ${perV} GB (HBM2e or HBM3 preferred)`],
+    ['Total aggregate VRAM',`${totV} GB`],
+    ['FP16 peak compute per GPU',`≥ ${minTF} TFLOPS`],
+    ['Memory bandwidth',bw],
+    ['Precision support',prec==='fp32'?'FP64, FP32 mandatory; FP16 optional':prec==='fp16'?'FP32, FP16/BF16, TF32 mandatory':'INT8, INT4; FP16 for fallback'],
+    ['GPU interconnect',link],
+    ['Host CPU','2× Intel Xeon Scalable 4th Gen or AMD EPYC 9004 (≥ 32 cores/socket)'],
+    ['System RAM',`≥ ${ram} GB DDR5 ECC registered`],
+    ['Primary storage',stor],
+    ['Network interface',net],
+    ['Power supply (rack-level)',psu],
+    ['Cooling',cool],
+    ['Operating system',os],
+    ['Software stack','CUDA 12.x / ROCm 6.x, cuDNN, NCCL, Docker/Podman container runtime'],
+    ['Redundancy & HA',red],
+    ['Compliance',sens==='sec'?'MeitY empanelled OEM; airgapped delivery':'GeM portal-listed OEM; ISI/BIS certification'],
+    ['Warranty',`≥ ${hor} years on-site NBD support`],
+  ];
+  g('sbody').innerHTML=specRows.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  const checks=['☐  Obtain minimum 3 OEM quotations via GeM / NIC eMerge portal','☐  Validate VRAM with OEM proof-of-concept before finalising','☐  Confirm CUDA / ROCm driver compatibility with planned software stack',sens==='sec'?'☐  Confirm MeitY / STQC empanelment of supplier':'☐  Confirm GeM listing and HSN code of hardware SKU','☐  Specify MTBF ≥ 2,50,000 hours in tender document','☐  Include MLPerf benchmark score as acceptance criterion in SLA','☐  Plan rack space (1U–4U per node) and verify data centre power load','☐  Obtain 3-year OPEX estimate covering power, cooling and maintenance',cnt>4?'☐  Engage system integrator for rack-level InfiniBand cabling plan':'☐  Verify PCIe slot availability on host server motherboard','☐  Define data security & media sanitisation protocol for decommissioning','☐  Ensure OEM provides India-based support escalation within 4 hours'];
+  g('cklist').innerHTML=checks.join('<br>');
+  g('fnote').textContent='Disclaimer: Values are engineering estimates. Validate with OEM benchmarks before issuing RFP. Costs subject to GeM/DGS&D rate contracts and applicable GST.';
+
+  specData={dept,tref,cnt,perV,totV,minTF,fam,alt,link,bw,psu,cool,net,stor,os,red,ram,spare,hor,bgt,wlLabel,precLabel,envLabel,uptLabel,sensLabel,prec,sens,upt,env,usr,ds,prm,tput,wl};
+
+  const r=g('res');r.classList.add('show');
+  g('rfpBox').classList.remove('show');
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function showRFP(){
+  buildRFP();
+  const rfp=g('rfpBox');rfp.classList.add('show');
+  showTab(0);
+  setTimeout(()=>rfp.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function showTab(i){
+  document.querySelectorAll('.rtab').forEach((t,j)=>t.classList.toggle('on',j===i));
+  document.querySelectorAll('.rfp-section').forEach((s,j)=>s.classList.toggle('on',j===i));
+}
+
+function buildRFP(){
+  const d=specData;
+  const today=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const deadlineDate=new Date(Date.now()+30*24*60*60*1000).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+
+  g('doc0').innerHTML=`<h2>REQUEST FOR PROPOSAL (RFP)</h2>
+<div class="clause">Tender Reference: <strong>${d.tref}</strong> &nbsp;|&nbsp; Date of Issue: <strong>${today}</strong> &nbsp;|&nbsp; Bid Submission Deadline: <strong>${deadlineDate}</strong></div>
+
+<h3>1. Issuing Authority</h3>
+${d.dept}
+Government of India
+(Hereinafter referred to as "The Department")
+
+<h3>2. Purpose &amp; Scope</h3>
+The Department invites sealed bids from eligible Original Equipment Manufacturers (OEMs), System Integrators, and authorised resellers empanelled on the Government e-Marketplace (GeM) for the <strong>supply, installation, testing, commissioning, and maintenance</strong> of Graphics Processing Unit (GPU) based computing infrastructure for the following purpose:
+
+Primary Workload: <strong>${d.wlLabel}</strong>
+Deployment Environment: <strong>${d.envLabel}</strong>
+Required Precision: <strong>${d.precLabel}</strong>
+
+<h3>3. Quantity &amp; Overview</h3>
+<table><thead><tr><th>Item</th><th>Requirement</th></tr></thead><tbody>
+<tr><td>GPU units (minimum)</td><td>${d.cnt} unit${d.cnt>1?'s':''} + ${d.spare} spare unit${d.spare>1?'s':''}</td></tr>
+<tr><td>Total VRAM required</td><td>${d.totV} GB</td></tr>
+<tr><td>Minimum compute</td><td>≥ ${d.minTF} TFLOPS (FP16)</td></tr>
+<tr><td>Planning horizon</td><td>${d.hor} year${d.hor>1?'s':''}</td></tr>
+<tr><td>Indicative budget</td><td>₹ ${d.bgt} lakhs (inclusive of GST &amp; installation)</td></tr>
+</tbody></table>
+
+<h3>4. Important Dates</h3>
+<table><thead><tr><th>Event</th><th>Date</th></tr></thead><tbody>
+<tr><td>Date of issue of RFP</td><td>${today}</td></tr>
+<tr><td>Last date for pre-bid queries</td><td>${new Date(Date.now()+10*864e5).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</td></tr>
+<tr><td>Pre-bid conference</td><td>${new Date(Date.now()+14*864e5).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</td></tr>
+<tr><td>Last date for bid submission</td><td>${deadlineDate}</td></tr>
+<tr><td>Technical bid opening</td><td>${new Date(Date.now()+32*864e5).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</td></tr>
+<tr><td>Financial bid opening</td><td>To be intimated separately</td></tr>
+</tbody></table>
+
+<h3>5. Bid Submission</h3>
+Bids must be submitted through the GeM portal (gem.gov.in) or as directed. Physical bids must be sealed and super-scribed with Tender Reference <strong>${d.tref}</strong>. Late submissions will be summarily rejected.`;
+
+  g('doc1').innerHTML=`<h2>SECTION 2 — ELIGIBILITY CRITERIA</h2>
+
+<h3>2.1 Mandatory Eligibility Conditions</h3>
+Bidders must satisfy ALL of the following conditions to be considered eligible:
+
+<div class="clause">EC-1: The bidder shall be a registered company / firm in India under the Companies Act 2013 or Partnership Act 1932, with a minimum of <strong>3 years</strong> of operational history as of the bid submission date.</div>
+<div class="clause">EC-2: The bidder must be listed on the <strong>Government e-Marketplace (GeM) portal</strong> as an OEM, System Integrator, or authorised reseller for GPU / high-performance computing hardware.</div>
+<div class="clause">EC-3: The bidder must have a minimum average annual turnover of <strong>₹ ${Math.max(10,Math.ceil(d.bgt*0.5))} lakhs</strong> over the last three financial years, certified by a Chartered Accountant.</div>
+<div class="clause">EC-4: The bidder must have successfully executed at least <strong>2 similar orders</strong> (GPU / HPC hardware supply) valued at ₹ ${Math.max(5,Math.ceil(d.bgt*0.3))} lakhs or above in the last 5 years, with satisfactory performance certificates from the procuring organisation.</div>
+<div class="clause">EC-5: The bidder must hold a valid <strong>GST registration certificate</strong> and must be compliant with all tax obligations as of the bid submission date.</div>
+${d.sens==='sec'?`<div class="clause">EC-6 (MANDATORY for Classified): The bidder or OEM must be <strong>MeitY empanelled</strong> and possess required security clearance. All delivery personnel must have valid security clearances. Airgapped delivery protocol is mandatory.</div>`:''}
+
+<h3>2.2 Technical Capability Requirements</h3>
+<div class="clause">TC-1: Bidder must demonstrate an authorised partnership or distributorship with the GPU OEM (NVIDIA / AMD / Intel) with valid OEM authorisation letter for India, valid as of bid submission date.</div>
+<div class="clause">TC-2: Bidder must have a dedicated technical support team in India capable of providing <strong>on-site support within 4 business hours</strong> of a support call in the region of installation.</div>
+<div class="clause">TC-3: Bidder must provide evidence of at least one GPU deployment of equal or greater scale (≥ ${d.cnt} GPU units) in a government, PSU, or enterprise environment.</div>
+<div class="clause">TC-4: The proposed GPU hardware must have an <strong>MTBF ≥ 2,50,000 hours</strong> as certified by the OEM.</div>
+
+<h3>2.3 Disqualification Criteria</h3>
+Bidders will be disqualified if:
+• They are blacklisted by any Central / State Government agency or PSU.
+• They are in a legal dispute with any government entity that may affect contract performance.
+• The hardware proposed is declared End-of-Life (EOL) at time of bid.
+• Bidder fails to submit any mandatory document listed in Section 6.`;
+
+  const specTableRows=specRows.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  g('doc2').innerHTML=`<h2>SECTION 3 — TECHNICAL SPECIFICATIONS</h2>
+
+<h3>3.1 Mandatory Minimum Technical Requirements</h3>
+The following specifications represent the <strong>minimum acceptable configuration</strong>. Bidders offering specifications below these thresholds will be technically disqualified. Higher specifications are encouraged and will be evaluated under Section 4.
+
+<table><thead><tr><th>Specification parameter</th><th>Minimum requirement</th></tr></thead><tbody>${specTableRows}</tbody></table>
+
+<h3>3.2 Compliance Statement</h3>
+<div class="clause">The bidder shall submit a <strong>Compliance Statement</strong> (Annexure-A) indicating for each specification parameter: (a) the exact specification of the offered item, (b) compliance status (Compliant / Not Compliant), and (c) supporting datasheet page reference. Any deviation must be explicitly declared and technically justified.</div>
+
+<h3>3.3 Proof of Performance (Benchmark)</h3>
+The selected vendor must demonstrate the following performance benchmarks during Factory Acceptance Testing (FAT) or Site Acceptance Testing (SAT):
+<table><thead><tr><th>Benchmark</th><th>Minimum acceptable score</th></tr></thead><tbody>
+<tr><td>MLPerf Training (if applicable)</td><td>As per published scores for offered GPU model</td></tr>
+<tr><td>FP16 compute throughput</td><td>≥ ${d.minTF} TFLOPS sustained</td></tr>
+<tr><td>Memory bandwidth</td><td>${d.bw}</td></tr>
+<tr><td>Inter-GPU bandwidth (if multi-GPU)</td><td>${d.link}</td></tr>
+<tr><td>System availability (30-day burn-in)</td><td>≥ 99% uptime during acceptance testing</td></tr>
+</tbody></table>
+
+<h3>3.4 Delivery &amp; Installation</h3>
+• Delivery timeline: Within <strong>90 days</strong> of purchase order issuance.
+• Installation, cabling, and commissioning: Within <strong>30 days</strong> of delivery.
+• Acceptance testing period: <strong>30 days</strong> post-installation.
+• Training to department staff: Minimum <strong>3 days</strong> hands-on training session.`;
+
+  g('doc3').innerHTML=`<h2>SECTION 4 — EVALUATION CRITERIA &amp; SLA</h2>
+
+<h3>4.1 Bid Evaluation Method</h3>
+Bids will be evaluated using the <strong>Quality and Cost Based Selection (QCBS)</strong> method with the following weightage:
+
+<table><thead><tr><th>Component</th><th>Weightage</th></tr></thead><tbody>
+<tr><td>Technical score (TS)</td><td>70%</td></tr>
+<tr><td>Financial score (FS)</td><td>30%</td></tr>
+<tr><td><strong>Final score</strong></td><td><strong>TS × 0.70 + FS × 0.30</strong></td></tr>
+</tbody></table>
+
+<h3>4.2 Technical Scoring Matrix</h3>
+<table><thead><tr><th>Criterion</th><th>Max marks</th></tr></thead><tbody>
+<tr><td>GPU compute performance (TFLOPS vs minimum)</td><td>25</td></tr>
+<tr><td>VRAM per GPU (vs minimum ${d.perV} GB)</td><td>20</td></tr>
+<tr><td>Memory bandwidth (vs minimum)</td><td>15</td></tr>
+<tr><td>OEM support infrastructure in India</td><td>15</td></tr>
+<tr><td>Past experience with similar deployments</td><td>10</td></tr>
+<tr><td>Warranty &amp; AMC terms beyond minimum</td><td>10</td></tr>
+<tr><td>Energy efficiency (Performance per Watt)</td><td>5</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>100</strong></td></tr>
+</tbody></table>
+Minimum qualifying technical score: <strong>60 out of 100</strong>. Bids scoring below 60 will not have their financial bids opened.
+
+<h3>4.3 Service Level Agreement (SLA)</h3>
+<table><thead><tr><th>SLA parameter</th><th>Requirement</th></tr></thead><tbody>
+<tr><td>System uptime guarantee</td><td>${d.upt==='crit'?'99.9%':d.upt==='hi'?'99.5%':'99.0%'} per month</td></tr>
+<tr><td>Response time for P1 (critical) fault</td><td>${d.upt==='crit'?'2 hours':d.upt==='hi'?'4 hours':'Next business day'}</td></tr>
+<tr><td>On-site engineer arrival</td><td>${d.upt==='crit'?'4 hours':d.upt==='hi'?'8 hours':'24 hours'} of ticket raise</td></tr>
+<tr><td>Hardware replacement (critical)</td><td>Next business day (NBD) replacement</td></tr>
+<tr><td>Preventive maintenance visits</td><td>Minimum 2 per year</td></tr>
+<tr><td>Support hours</td><td>${d.upt==='std'?'9 AM – 6 PM, Mon–Sat':'24 × 7 × 365'}</td></tr>
+<tr><td>Penalty for SLA breach</td><td>0.5% of contract value per week of default, max 10%</td></tr>
+</tbody></table>
+
+<h3>4.4 Performance Penalty</h3>
+If the delivered system fails to achieve the benchmarks specified in Section 3.3 during acceptance testing, the vendor must either:
+(a) Replace or upgrade the hardware at no additional cost within 30 days, or
+(b) Provide a price reduction proportional to the performance deficit.`;
+
+  g('doc4').innerHTML=`<h2>SECTION 5 — TERMS, CONDITIONS &amp; COMPLIANCE</h2>
+
+<h3>5.1 General Terms</h3>
+<div class="clause">All procurement shall be governed by the General Financial Rules (GFR) 2017, Manual on Policies and Procedures for Purchase of Goods (MoPP), and applicable CVC guidelines. In case of conflict, GFR 2017 shall prevail.</div>
+
+<h3>5.2 Payment Terms</h3>
+<table><thead><tr><th>Milestone</th><th>Payment %</th></tr></thead><tbody>
+<tr><td>Delivery of hardware at site</td><td>60%</td></tr>
+<tr><td>Successful installation &amp; commissioning</td><td>30%</td></tr>
+<tr><td>Completion of acceptance testing &amp; staff training</td><td>10%</td></tr>
+</tbody></table>
+All payments will be released within 30 days of milestone completion and receipt of invoice, subject to TDS deduction as applicable.
+
+<h3>5.3 Security Deposit &amp; Performance Bank Guarantee</h3>
+• Earnest Money Deposit (EMD): ₹ ${Math.ceil(d.bgt*0.02)} lakhs (2% of estimated value), refundable.
+• Performance Bank Guarantee (PBG): 10% of contract value, valid for contract period + 60 days.
+
+<h3>5.4 Data Security &amp; Confidentiality</h3>
+<div class="clause">${d.sens==='sec'?'All personnel involved in delivery, installation, and maintenance must possess valid security clearances. No data shall be transmitted outside secured premises. OEM must provide written commitment that no remote access, telemetry, or backdoor access is built into the hardware or firmware.':d.sens==='res'?'All data processed on the GPU infrastructure is classified as Restricted. Vendor personnel must sign a Non-Disclosure Agreement (NDA) before accessing the installation site. Media sanitisation must follow DoE/NIST SP 800-88 guidelines on decommissioning.':'The vendor must maintain confidentiality of department data and sign a standard NDA. Decommissioned media must be physically destroyed or wiped per IT Act 2000 guidelines.'}</div>
+
+<h3>5.5 Intellectual Property</h3>
+All custom configurations, scripts, and documentation developed specifically for this project shall vest with ${d.dept}. The vendor retains rights to pre-existing IP used in standard product offering.
+
+<h3>5.6 Dispute Resolution</h3>
+Any disputes arising out of this contract shall be settled by arbitration under the Arbitration and Conciliation Act 1996, with a sole arbitrator appointed by the Secretary of ${d.dept}. Jurisdiction: New Delhi.
+
+<h3>5.7 Force Majeure</h3>
+Neither party shall be held liable for delays caused by events beyond reasonable control (natural disasters, war, government orders). The affected party must notify the other within 7 days of occurrence.
+
+<h3>5.8 Required Documents with Bid</h3>
+1. Company registration certificate
+2. GST registration certificate
+3. OEM authorisation letter (valid, original)
+4. Audited financial statements (last 3 years)
+5. Past order / experience certificates (min. 2)
+6. Technical compliance statement (Annexure-A)
+7. Datasheet / brochure of proposed GPU hardware
+8. Signed declaration of non-blacklisting
+9. EMD proof of payment
+${d.sens==='sec'?'10. Security clearance certificates for delivery personnel\n11. MeitY / STQC empanelment certificate':'10. Self-declaration of GeM registration'}
+
+<h3>5.9 Contact for Queries</h3>
+All pre-bid queries must be submitted in writing to the designated tender officer of ${d.dept} with reference to Tender No. <strong>${d.tref}</strong> before the pre-bid query deadline specified in Section 1.
+
+<em>This RFP document is issued for procurement purposes under Government of India rules. ${d.dept} reserves the right to accept or reject any or all bids without assigning any reason thereof.</em>`;
+}
+
+function fullRFPText(){
+  const sections=['doc0','doc1','doc2','doc3','doc4'];
+  return sections.map(id=>{
+    const el=g(id);
+    return el.innerText||el.textContent;
+  }).join('\n\n'+'='.repeat(60)+'\n\n');
+}
+
+function copyRFP(){
+  navigator.clipboard.writeText(fullRFPText()).then(()=>{
+    const btn=event.target.closest('button');
+    const orig=btn.innerHTML;
+    btn.innerHTML='<i class="ti ti-check" aria-hidden="true"></i> Copied!';
+    setTimeout(()=>btn.innerHTML=orig,2000);
+  });
+}
+
+function downloadRFP(){
+  const d=specData;
+  const blob=new Blob([fullRFPText()],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`RFP_${(d.tref||'GPU_Tender').replace(/[^a-zA-Z0-9]/g,'_')}.txt`;
+  a.click();
+}
+
+function expTxt(){
+  if(!specRows.length){alert('Please generate the specification first.');return;}
+  let t='GPU PROCUREMENT SPECIFICATION SHEET\n=====================================\nGenerated: '+new Date().toLocaleString('en-IN')+'\n\nKEY METRICS\n-----------\n';
+  document.querySelectorAll('#mrow .met').forEach(m=>{t+=m.querySelector('.ml').textContent+': '+m.querySelector('.mv').textContent+'\n';});
+  t+='\nDETAILED SPECIFICATION\n----------------------\n';
+  specRows.forEach(([k,v])=>{t+=k+': '+v+'\n';});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='GPU_Spec_Sheet.txt';a.click();
+}
+</script>
